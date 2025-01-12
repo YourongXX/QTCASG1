@@ -5,6 +5,7 @@ from qiskit.circuit.library import GroverOperator
 from qiskit_ibm_runtime import QiskitRuntimeService
 from qiskit_ibm_runtime import SamplerV2 as Sampler
 from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
+from matplotlib import pyplot as plt
 # Initialize QiskitRuntimeService and check available backends
 service = QiskitRuntimeService()
 
@@ -53,9 +54,11 @@ job = sampler.run([isa_circuit])
 print(f"Job ID is {job.job_id()}")
 # Wait for the job to complete and get the result
 job_result = job.result()
-
+pub_result = job_result[0]
 # Get the counts from the result
-counts = job_result.get_counts()
-
+counts = pub_result.data.c.get_counts()
+print(f"{counts}")
 # Visualize the result
 plot_histogram(counts)
+plt.hist(counts, bins=30, color='skyblue', edgecolor='black')
+plt.show()
